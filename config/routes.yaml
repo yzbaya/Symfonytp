@@ -1,5 +1,5 @@
 homepage:
   path: /
-  controller: App\Controller\IndexController::home
+  controller: App\Controller\IndexController::edit
   defaults:
     name: 'World'

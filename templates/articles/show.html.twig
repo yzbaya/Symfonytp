@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ article.nom }}{% endblock %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+{% block body %}
+<h1>{{ article.nom }}</h1>
+<p>{{ article.prix }}</p>
+<hr>
+<a href="/">Retour</a>
+{% endblock %}
