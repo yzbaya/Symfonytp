@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\ArticleType;
+use App\Entity\Category;
+use App\Form\CategoryType;
   class IndexController extends AbstractController{
     /**
      * @Route("/", name="home")
@@ -68,15 +70,16 @@ public function show(EntityManagerInterface $entityManager,int $id): Response
  * @Route("/article/edit/{id}", name="edit_article")
  * Method({"GET", "POST"})
  */
-public function edit(EntityManagerInterface $entityManager,int $id): Response
+public function edit(EntityManagerInterface $entityManager,int $id,Request $request): Response
     {
       $article = new Article();
       $article =$entityManager->getRepository(Article::class)->find($id);
       $form = $this->createForm(ArticleType::class,$article);
        
-       $form->handleRequest($entityManager);
+       $form->handleRequest($request);
 
        if($form->isSubmitted() && $form->isValid()) {
+        $entityManager->flush();
         return $this->redirectToRoute('article_list');   
          }
         return $this->render('articles/edit.html.twig', ['form' => $form->createView()]);
@@ -92,6 +95,22 @@ public function edit(EntityManagerInterface $entityManager,int $id): Response
     $response = new Response();
     $response->send();
     return $this->redirectToRoute('article_list');
+ }
+
+ /**
+ * @Route("/category/newCat", name="new_category")
+ * Method({"GET", "POST"})
+ */
+ public function newCategory(Request $request,EntityManagerInterface $entityManager) {
+      $category = new Category();
+      $form = $this->createForm(CategoryType::class,$category);
+      $form->handleRequest($request);
+      if($form->isSubmitted() && $form->isValid()) {
+      $article = $form->getData();
+      $entityManager->persist($category);
+      $entityManager->flush();
+ }
+return $this->render('articles/newCategory.html.twig',['form'=>$form->createView()]);
  }
 
  }
