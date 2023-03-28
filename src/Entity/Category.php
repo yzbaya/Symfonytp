@@ -23,11 +23,11 @@ class Category
     private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Article::class)]
-    private Collection $article;
+    private Collection $articles;
 
     public function __construct()
     {
-        $this->article = new ArrayCollection();
+        $this->articles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -62,15 +62,15 @@ class Category
     /**
      * @return Collection<int, Article>
      */
-    public function getArticle(): Collection
+    public function getArticles(): Collection
     {
-        return $this->article;
+        return $this->articles;
     }
 
     public function addArticle(Article $article): self
     {
-        if (!$this->article->contains($article)) {
-            $this->article->add($article);
+        if (!$this->articles->contains($article)) {
+            $this->articles->add($article);
             $article->setCategory($this);
         }
 
@@ -79,7 +79,7 @@ class Category
 
     public function removeArticle(Article $article): self
     {
-        if ($this->article->removeElement($article)) {
+        if ($this->articles->removeElement($article)) {
             // set the owning side to null (unless already changed)
             if ($article->getCategory() === $this) {
                 $article->setCategory(null);
@@ -88,8 +88,4 @@ class Category
 
         return $this;
     }
-
-
-
-
 }

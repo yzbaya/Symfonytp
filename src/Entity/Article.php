@@ -14,14 +14,13 @@ class Article
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-
-
     private ?string $Nom = null;
 
     #[ORM\Column]
-    private ?int $Prix = null;
+    private ?int $prix = null;
 
-    #[ORM\ManyToOne(inversedBy: 'article')]
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
     public function getId(): ?int
@@ -43,12 +42,12 @@ class Article
 
     public function getPrix(): ?int
     {
-        return $this->Prix;
+        return $this->prix;
     }
 
-    public function setPrix(int $Prix): self
+    public function setPrix(int $prix): self
     {
-        $this->Prix = $Prix;
+        $this->prix = $prix;
 
         return $this;
     }
