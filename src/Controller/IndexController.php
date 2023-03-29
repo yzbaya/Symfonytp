@@ -3,6 +3,7 @@
    namespace App\Controller;
 
 
+use App\Entity\PriceSearch;
 use App\Entity\PropertySearch;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -157,6 +158,25 @@ $articles= $category->getArticles();
  }
  
  return $this->render('articles/articlesParCategorie.html.twig',['form' => $form->createView(),'articles' => $articles]);
+ }
+/**
+ * @Route("/art_prix/", name="article_par_prix")
+ * Method({"GET"})
+ */
+ public function articlesParPrix(Request $request,EntityManagerInterface $entityManager)
+ {
+ 
+ $priceSearch = new PriceSearch();
+ $form = $this->createForm(PriceSearchType::class,$priceSearch);
+ $form->handleRequest($request);
+ $articles= [];
+ if($form->isSubmitted() && $form->isValid()) {
+ $minPrice = $priceSearch->getMinPrice();
+ $maxPrice = $priceSearch->getMaxPrice();
+ 
+ $articles= $entityManager->getRepository(Article::class)->findByPriceRange($minPrice,$maxPrice);
+ }
+ return $this->render('articles/articlesParPrix.html.twig',[ 'form' =>$form->createView(), 'articles' => $articles]); 
  }
 
  }
